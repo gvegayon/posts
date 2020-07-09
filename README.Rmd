@@ -27,7 +27,7 @@ yaml_header <- function(fn) {
 readmes <- list.files(recursive = TRUE, full.names = TRUE, pattern = "README[.]R?md")
 
 readmes <- readmes[grepl("[.]/.+/", readmes)]
-paths   <- gsub("^[.]/|README[.]R?md$", "", readmes)
+paths   <- gsub("^[.]/", "", readmes)
 details <- lapply(readmes, yaml_header)
 
 # Which have contents?
@@ -45,7 +45,7 @@ details <- details[idx != 1]
 # Building the table
 tab <- data.frame(
   Title = sprintf(
-    "<a href=\"%sREADME.md\" target=\"_blank\" style=\"font-weight:bold;\">%s</a>",
+    "<a href=\"%s\" target=\"_blank\" style=\"font-weight:bold;\">%s</a>",
     paths,
     sapply(details, "[[", "title")
     ),
