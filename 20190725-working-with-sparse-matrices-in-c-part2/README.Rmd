@@ -9,7 +9,7 @@ tags:
   - rcpp
   - rstats
 summary: "This is an update on the performance of sparse matrices using the C++ armadillo (with the Rcpp wrapper)."
-draft: true
+draft: false
 ---
 
 ```{r Setup, echo=FALSE}

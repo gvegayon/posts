@@ -2,7 +2,63 @@
 output: github_document
 ---
 
-# Random Posts
+# Random posts ![GitHub last commit](https://img.shields.io/github/last-commit/gvegayon/posts)
+
+A continuous work in progress, you can find more information about my work
+[here](https://ggvy.cl).
+
+```{r aux, echo=FALSE}
+#' Function to read yaml header in markdown documents.
+yaml_header <- function(fn) {
+  x   <- readLines(fn, warn = FALSE)
+  idx <- which(grepl("^---\\s?$", x, perl = TRUE))#[1:2]
+  if (length(idx) < 2)
+    return(list())
+  idx <- idx[1:2]
+  
+  x   <- x[(idx[1]+1):(idx[2]-1)]
+  
+  yaml::read_yaml(text=paste(x, collapse = "\n"))
+}
+
+```
+
+```{r table, echo=FALSE}
+readmes <- list.files(recursive = TRUE, full.names = TRUE, pattern = "README[.]R?md")
+
+readmes <- readmes[grepl("[.]/.+/", readmes)]
+paths   <- gsub("^[.]/|README[.]md$", "", readmes)
+details <- lapply(readmes, yaml_header)
+
+# Which have contents?
+idx <- sapply(details, length) > 0
+paths <- paths[idx]
+details <- details[idx]
+
+idx <- sapply(details, "[[", "draft")
+idx <- sapply(idx, length)
+idx[idx == 1] <- sapply(details[idx==1], "[[", "draft")
+
+paths <- paths[idx != 1]
+details <- details[idx != 1]
+
+# Building the table
+tab <- data.frame(
+  Title = sprintf(
+    "<a href=\"%sREADME.md\" target=\"_blank\" style=\"font-weight:bold;\">%s</a>",
+    paths,
+    sapply(details, "[[", "title")
+    ),
+  Date  = sapply(details, "[[", "date"),
+  Tags  = sapply(lapply(details, "[[", "tags"), paste, collapse=","),
+  stringsAsFactors = FALSE
+)
+tab$Date <- as.Date(tab$Date)
+tab$Title <- paste0(tab$Title, " (", format(tab$Date, format = "%B %e, %Y"), ")")
+knitr::kable(tab[order(tab$Date, decreasing = TRUE),-2,drop=FALSE], row.names = FALSE)
+```
+
+
 
 
 
