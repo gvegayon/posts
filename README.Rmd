@@ -27,7 +27,7 @@ yaml_header <- function(fn) {
 readmes <- list.files(recursive = TRUE, full.names = TRUE, pattern = "README[.]R?md")
 
 readmes <- readmes[grepl("[.]/.+/", readmes)]
-paths   <- gsub("^[.]/|README[.]md$", "", readmes)
+paths   <- gsub("^[.]/|README[.]R?md$", "", readmes)
 details <- lapply(readmes, yaml_header)
 
 # Which have contents?
